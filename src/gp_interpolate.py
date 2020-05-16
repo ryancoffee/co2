@@ -24,7 +24,7 @@ def refeaturize(x,center=0):
     for v in x:
         v -= center
         arg = math.modf(v)[0]
-        features.append((np.power(int(v*8),int(2))//100 , np.power(int(v*8),int(3))//10000 , int(256 * (1.+np.cos(np.pi*2*arg))) , int(256*(1.+np.sin(np.pi*2*arg))), int(256 * (1.+np.cos(np.pi*4*arg))) , int(256*(1.+np.sin(np.pi*4*arg))) , int(256 * (1.+np.cos(np.pi*2*v/10))) , int(256*(1.+np.sin(np.pi*2*v/10))) , int(256 * (1.+np.cos(np.pi*2*v/20))) , int(256*(1.+np.sin(np.pi*2*v/20)))) )
+        features.append((np.power(int(v*8),int(2))//100 , np.power(int(v*8),int(3))//10000 , int(256 * (np.cos(np.pi*2*arg))) , int(256*(np.sin(np.pi*2*arg))), int(256 * (np.cos(np.pi*4*arg))) , int(256*(np.sin(np.pi*4*arg))) , int(256 * (np.cos(np.pi*2*v/10))) , int(256*(np.sin(np.pi*2*v/10))) , int(256 * (np.cos(np.pi*2*v/20))) , int(256*(np.sin(np.pi*2*v/20)))) )
     return features
 
 
