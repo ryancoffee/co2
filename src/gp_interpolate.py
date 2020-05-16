@@ -19,12 +19,18 @@ def katiesplit(x,y):
     y_validate = [y[i] for i in inds[3*sz//4:]]
     return (x_train,x_test,x_validate,y_train,y_test,y_validate)
 
-def featurize(x):
+def refeaturize(x,quadmod):
     features = []
     for v in x:
         arg,yr = math.modf(v) 
-        arg *= 2*np.pi
-        features.append((yr,128*(1.+np.cos(arg)),128*(1.+np.sin(arg))))
+        features.append((int(v*8) , np.power(int(v*8),int(2))//100 , int(256 * (1.+np.cos(np.pi*2*arg))) , int(256*(1.+np.sin(np.pi*2*arg))), int(256 * (1.+np.cos(np.pi*4*arg))) , int(256*(1.+np.sin(np.pi*4*arg))) , int(256 * (1.+np.cos(np.pi*2*v/10))) , int(256*(1.+np.sin(np.pi*2*v/10))) ) )
+    return features
+
+
+def featurize(x):
+    features = []
+    for v in x:
+        features.append((int(v*8) , np.power(int(v*8),int(2))//100 )) 
     return features
 
 def main():
@@ -43,12 +49,21 @@ def main():
     x_learn = featurize(x)
     y_learn = [val for val in y]
     x_train,x_test,x_validate,y_train,y_test,y_validate = katiesplit(x_learn,y_learn)
-    linmod = linear_model.LinearRegression().fit(x_train, y_train)
-    print ("Accuracy (test): ", linmod.score(x_test, y_test))
-    print ("Accuracy (validate): ", linmod.score(x_validate, y_validate))
+    quadmod = linear_model.LinearRegression().fit(x_train, y_train)
+    print ("Accuracy (test): ", quadmod.score(x_test, y_test))
+    print ("Accuracy (validate): ", quadmod.score(x_validate, y_validate))
+
+    x_learn = refeaturize(x,quadmod)
+    x_train,x_test,x_validate,y_train,y_test,y_validate = katiesplit(x_learn,y_learn)
+    fullmod = linear_model.LinearRegression().fit(x_train, y_train)
+    np.savetxt('%s.original'%sys.argv[1],np.column_stack((x,x_learn,y_learn)),fmt='%.2f')
     samp = np.zeros((1,2),dtype=int)
     samp = featurize([70.5])
     print(linmod.predict(samp))
+    x = np.linspace(0,80,2561)
+    x_pred = featurize( x )
+    y_pred = linmod.predict(x_pred)
+    np.savetxt('%s.predictions'%sys.argv[1],np.column_stack((x,x_pred,y_pred)),fmt='%.2f')
     return
 
 if __name__ == '__main__':
