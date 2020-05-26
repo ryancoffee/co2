@@ -84,7 +84,7 @@ set cntrparam firstlinetype 0 unsorted
 set cntrparam points 5
 set size ratio 0 1,1
 set origin 0,0
-set style data points
+set style data lines
 set style function lines
 unset xzeroaxis
 unset yzeroaxis
@@ -165,22 +165,25 @@ set fontpath
 set psdir
 set fit brief errorvariables nocovariancevariables errorscaling prescale nowrap v5
 GNUTERM = "qt"
-file = "../data_fs/raw/archive.csv.predictions"
-orig = "../data_fs/raw/archive.csv.original"
-set term png size 800,800
-set output './plotting.predictions.png'
-## Last datafile plotted: "../data_fs/raw/archive.csv.predictions"
+## Last datafile plotted: "archive.csv.original"
+set term png size 800,600
+set output './figs/plotting.models.png'
+set xlabel 'year'
+set ylabel 'CO_2 concentration [ppm]'
 set multiplot
-set size 1,.5
-set origin 0,.5
-set key top left
-plot orig u (1950+$1):($4) pt 7 title 'data',file u (1950+$1):($12) w lines title 'prediction'
-set size .5,.5
+set size 1,1
 set origin 0,0
-set xrange [1970:1980]
-plot orig u (1950+$1):($4) pt 7 notitle ,file u (1950+$1):($12) w lines notitle
-set xrange [2010:2020]
-set origin 0.5,0
-plot orig u (1950+$1):($4) pt 7 notitle,file u (1950+$1):($12) w lines notitle
+set key bottom right
+plot './data_fs/raw/archive.csv.original' u (1950+$1):4 w points pt 6 title 'data',\
+	'./data_fs/raw/archive.csv.gp_predictions' u (1950+$1):2 title 'tutorial gp',\
+	'./data_fs/raw/archive.csv.gp_predictions' u (1950+$1):4 lw 2 title 'reduced gp',\
+	'./data_fs/raw/archive.csv.predictions' u (1950+$1):12 title 'perturbative linear model'
+set size .5,.45
+set origin .1,.5
+set xrange [1990:2000]
+unset xlabel
+unset ylabel
+unset key
+replot
 unset multiplot
 #    EOF
