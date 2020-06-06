@@ -5,7 +5,7 @@ import numpy as np
 import sys
 from sklearn import linear_model
 from sklearn.gaussian_process import GaussianProcessRegressor
-from sklearn.gaussian_process.kernels import RBF, WhiteKernel, RationalQuadratic, ExpSineSquared
+from sklearn.gaussian_process.kernels import RBF, WhiteKernel, RationalQuadratic, ExpSineSquared, ConstantKernel
 import random
 import math
 
@@ -100,7 +100,8 @@ def main():
     k2 = 2.0**2 * ExpSineSquared(length_scale=1.0, periodicity=1.0, periodicity_bounds=(.9,1.1))  # seasonal component
     #k3 = 10**2 * RationalQuadratic(length_scale=10.0, alpha=1.0) # medium term irregularities
     k4 = 0.1**2 * RBF(length_scale=0.1) + WhiteKernel(noise_level=0.1**2, noise_level_bounds=(1e-3, np.inf))  # noise terms
-    kernel = k1 + k2 + k4
+    k5 = ConstantKernel(constant_value = 10000,constant_value_bounds="fixed") # baseline shift
+    kernel = k1 + k2 + k4 + k5
 
 
     gp_me = GaussianProcessRegressor(kernel=kernel, alpha=0, normalize_y=True)

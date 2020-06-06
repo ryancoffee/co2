@@ -167,7 +167,7 @@ set fit brief errorvariables nocovariancevariables errorscaling prescale nowrap 
 GNUTERM = "qt"
 ## Last datafile plotted: "archive.csv.original"
 set term png size 800,600
-set output './figs/plotting.models.png'
+set output './figs/plotting.models.ConstantKernel.png'
 set xlabel 'year'
 set ylabel 'CO_2 concentration [ppm]'
 set multiplot
